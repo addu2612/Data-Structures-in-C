@@ -16,7 +16,7 @@ void create()
     if (start == NULL)
     {
         nn = (struct node *)malloc(sizeof(struct node));
-        printf("Enter the value u want to insert:\n");
+        printf("Enter the value you want to insert:\n");
         scanf("%d", &val);
         nn->data = val;
         nn->next = NULL;
@@ -25,7 +25,7 @@ void create()
     else
     {
         nn = (struct node *)malloc(sizeof(struct node));
-        printf("Enter the value u want to insert:\n");
+        printf("Enter the value you want to insert:\n");
         scanf("%d", &val);
         nn->data = val;
         nn->next = NULL;
@@ -43,7 +43,7 @@ void insert_beg()
     struct node *nn;
     int val;
     nn = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the value u want to insert:\n");
+    printf("Enter the value you want to insert:\n");
     scanf("%d", &val);
     nn->data = val;
     nn->next = start;
@@ -55,7 +55,7 @@ void insert_end()
     struct node *nn, *temp;
     int val;
     nn = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the value u want to insert:\n");
+    printf("Enter the value you want to insert:\n");
     scanf("%d", &val);
     nn->data = val;
     nn->next = NULL;
@@ -72,7 +72,7 @@ void insert_after()
     struct node *nn, *temp;
     int val, x;
     nn = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the value u want to insert:\n");
+    printf("Enter the value you want to insert:\n");
     scanf("%d", &val);
     nn->data = val;
     printf("Enter the value after which u want to insert:\n");
@@ -98,7 +98,7 @@ void insert_before()
     struct node *nn, *temp, *p;
     int x, val;
     nn = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the value u want to insert:\n");
+    printf("Enter the value you want to insert:\n");
     scanf("%d", &val);
     nn->data = val;
     printf("Enter the value before which u want to insert:\n");
@@ -132,7 +132,7 @@ void delete()
 {
     int val;
     struct node *temp, *p;
-    printf("Enter the value u want to delete:");
+    printf("Enter the value you want to delete:");
     scanf("%d", &val);
     temp = start;
     while (temp != NULL && temp->data != val)
