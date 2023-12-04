@@ -178,7 +178,7 @@ int main()
         printf("1. Addition\n");
         printf("2. Subtraction\n");
         printf("3. Display Result\n");
-        printf("0. Exit\n");
+        printf("4. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -203,7 +203,7 @@ int main()
             display(start3);
             break;
 
-        case 0:
+        case 4:
             printf("Exiting program.\n");
             break;
 
