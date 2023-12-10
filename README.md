@@ -1,3 +1,3 @@
 # Data-Structures-in-C
 
-![DS](https://www.google.com/url?sa=i&url=https%3A%2F%2Fpaulonteri.com%2Fdsa%2Fds%26a%2Ftime-and-space-complexity&psig=AOvVaw0YEmmPRppdyoamm6ul3U1Z&ust=1702312041403000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPDv0dakhYMDFQAAAAAdAAAAABAv)
+![Alt Text]([direct_image_url](https://paulonteri.com/dsa/assets/images/Common_Data_Structure_Operations-9cfc3652a9e02d4b146845ad8f24f365.png)https://paulonteri.com/dsa/assets/images/Common_Data_Structure_Operations-9cfc3652a9e02d4b146845ad8f24f365.png)
