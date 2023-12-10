@@ -38,33 +38,33 @@ int main()
     }
 
     do
+{
+    for (i = 1; i <= n; i++)
+        vis[i] = 0;
+
+    printf("\nMenu");
+    printf("\n1. B.F.S");
+    printf("\n2. D.F.S");
+    printf("\nEnter the choice: ");
+    scanf("%d", &ch);
+    printf("Enter the source vertex: ");
+    scanf("%d", &s);
+
+    switch (ch)
     {
-        for (i = 1; i <= n; i++)
-            vis[i] = 0;
+    case 1:
+        bfs(s, n);
+        break;
+    case 2:
+        dfs(s, n);
+        break;
+    }
 
-        printf("\nMenu");
-        printf("\n1. B.F.S");
-        printf("\n2. D.F.S");
-        printf("\nEnter the choice: ");
-        scanf("%d", &ch);
-        printf("Enter the source vertex: ");
-        scanf("%d", &s);
+    printf("\nDo you want to continue (y/n)? ");
+    scanf(" %c", &c);  
 
-        switch (ch)
-        {
-        case 1:
-            bfs(s, n);
-            break;
-        case 2:
-            dfs(s, n);
-            break;
-        }
+} while ((c == 'y') || (c == 'Y'));
 
-        printf("\nDo u want to continue(y/n)? ");
-        scanf(" %c", &dummy);
-        scanf(" %c", &c);
-
-    } while ((c == 'y') || (c == 'Y'));
 
     return 0;
 }
