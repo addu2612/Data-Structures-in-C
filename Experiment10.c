@@ -1,113 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include<stdio.h>
 #define SIZE 10
 
-struct Node {
-    int data;
-    struct Node* next;
-};
-
-struct Node* hashTable[SIZE];
-
-// Function to initialize the hash table
-void initializeHashTable() {
-    for (int i = 0; i < SIZE; i++) {
-        hashTable[i] = NULL;
-    }
+int hash(int key){
+    return key%SIZE;
 }
 
-// Function to insert a key into the hash table
-void insert(int key) {
-    int index = key % SIZE;
-    
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = key;
-    newNode->next = NULL;
-
-    if (hashTable[index] == NULL) {
-        hashTable[index] = newNode;
-    } else {
-        struct Node* temp = hashTable[index];
-        while (temp->next != NULL) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
+int probe(int H[],int key){
+    int index=hash(key);
+    int i=0;
+    while(H[(index+i)%SIZE]!=0){
+        i++;
     }
+    return (index+i)%SIZE;
 }
 
-// Function to search for a key in the hash table
-int search(int key) {
-    int index = key % SIZE;
-    
-    struct Node* temp = hashTable[index];
-    while (temp != NULL) {
-        if (temp->data == key) {
-            return 1;  // Key found
-        }
-        temp = temp->next;
+void Insert(int H[], int key){
+    int index = hash(key);
+    if(H[index] != 0){
+        index = probe(H, key);
     }
-    return 0;  // Key not found
+    H[index] = key;  
 }
 
-// Function to display the hash table
-void displayHashTable() {
-    printf("\nHash Table:\n");
-    for (int i = 0; i < SIZE; i++) {
-        printf("Index %d:", i);
-        struct Node* temp = hashTable[i];
-        while (temp != NULL) {
-            printf(" %d", temp->data);
-            temp = temp->next;
-        }
-        printf("\n");
+int Search(int H[], int key){
+    int index=hash(key);
+    int i=0;
+    while(H[index+i]%SIZE!=key){
+        i++;
     }
+    return (index+i)%SIZE;
 }
 
-int main() {
-    initializeHashTable();
-
-    int choice, key;
-
-    do {
-        printf("\nHashing Techniques Menu:\n");
-        printf("1. Insert\n");
-        printf("2. Search\n");
-        printf("3. Display Hash Table\n");
-        printf("0. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                printf("Enter the key to insert: ");
-                scanf("%d", &key);
-                insert(key);
-                break;
-
-            case 2:
-                printf("Enter the key to search: ");
-                scanf("%d", &key);
-                if (search(key)) {
-                    printf("Key %d found in the hash table.\n", key);
-                } else {
-                    printf("Key %d not found in the hash table.\n", key);
-                }
-                break;
-
-            case 3:
-                displayHashTable();
-                break;
-
-            case 0:
-                printf("Exiting program.\n");
-                break;
-
-            default:
-                printf("Invalid choice! Please enter a valid option.\n");
-        }
-
-    } while (choice != 0);
+int main(){
+    int HT[10]={0};
+    Insert(HT,12);
+    Insert(HT,25);
+    Insert(HT,56);
+    Insert(HT,35);
 
     return 0;
 }
