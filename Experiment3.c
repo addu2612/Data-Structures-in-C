@@ -3,212 +3,130 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node
-{
+// Node structure for a term in a polynomial
+struct Node {
     int coeff, power;
-    struct node *next;
-} *start1, *start2, *start3;
+    struct Node *next;
+};
 
-struct node *create(struct node *start)
-{
+// Function to create a polynomial
+struct Node *createPoly() {
     int n, c, p;
-    printf("Enter the number of elements:\n");
+    struct Node *start = NULL, *temp;
+
+    printf("Enter the number of terms: ");
     scanf("%d", &n);
-    for (int i = 0; i < n; i++)
-    {
-        struct node *nn, *temp;
-        nn = (struct node *)malloc(sizeof(struct node));
-        printf("Enter the coefficient and power respectively:\n");
-        scanf("%d\t%d", &c, &p);
-        nn->coeff = c;
-        nn->power = p;
-        nn->next = NULL;
-        if (start == NULL)
-        {
-            start = nn;
-        }
-        else
-        {
+
+    for (int i = 0; i < n; i++) {
+        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        printf("Enter coefficient and power: ");
+        scanf("%d%d", &c, &p);
+        newNode->coeff = c;
+        newNode->power = p;
+        newNode->next = NULL;
+
+        if (start == NULL) {
+            start = newNode;
+        } else {
             temp = start;
-            while (temp->next != NULL)
-            {
+            while (temp->next != NULL) {
                 temp = temp->next;
             }
-            temp->next = nn;
+            temp->next = newNode;
         }
     }
+
     return start;
 }
 
-void addnode(int c, int p)
-{
-    struct node *nn, *temp;
-    nn = (struct node *)malloc(sizeof(struct node));
-    nn->coeff = c;
-    nn->power = p;
-    nn->next = NULL;
-    if (start3 == NULL)
-    {
-        start3 = nn;
-    }
-    else
-    {
-        temp = start3;
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        temp->next = nn;
-    }
-}
+// Function to add or subtract two polynomials
+struct Node *addOrSubtractPolynomials(struct Node *poly1, struct Node *poly2, int subtract) {
+    struct Node *result = NULL;
+    struct Node *t1 = poly1;
+    struct Node *t2 = poly2;
 
-void polynomial_add()
-{
-    int n, c, p;
-    struct node *t1 = start1;
-    struct node *t2 = start2;
-    while (t1 != NULL && t2 != NULL)
-    {
-        if (t1->power == t2->power)
-        {
-            c = t1->coeff + t2->coeff;
+    while (t1 != NULL || t2 != NULL) {
+        int c = 0, p = 0;
+
+        if (t1 != NULL) {
+            c += t1->coeff;
             p = t1->power;
-            addnode(c, p);
-            t1 = t1->next;
-            t2 = t2->next;
-        }
-        else if (t1->power > t2->power)
-        {
-            addnode(t1->coeff, t1->power);
             t1 = t1->next;
         }
-        else
-        {
-            addnode(t2->coeff, t2->power);
+
+        if (t2 != NULL) {
+            c += (subtract ? -1 : 1) * t2->coeff;
+            p = (t2->power > p) ? t2->power : p;
             t2 = t2->next;
         }
-    }
-    if (t1 == NULL)
-    {
-        while (t2 != NULL)
-        {
-            addnode(t2->coeff, t2->power);
-            t2 = t2->next;
+
+        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        newNode->coeff = c;
+        newNode->power = p;
+        newNode->next = NULL;
+
+        if (result == NULL) {
+            result = newNode;
+        } else {
+            struct Node *temp = result;
+            while (temp->next != NULL) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
         }
     }
-    if (t2 == NULL)
-    {
-        while (t1 != NULL)
-        {
-            addnode(t1->coeff, t1->power);
-            t1 = t1->next;
-        }
-    }
+
+    return result;
 }
 
-void polynomial_subtract()
-{
-    int n, c, p;
-    struct node *t1 = start1;
-    struct node *t2 = start2;
-    while (t1 != NULL && t2 != NULL)
-    {
-        if (t1->power == t2->power)
-        {
-            c = t1->coeff - t2->coeff;
-            p = t1->power;
-            addnode(c, p);
-            t1 = t1->next;
-            t2 = t2->next;
-        }
-        else if (t1->power > t2->power)
-        {
-            addnode(t1->coeff, t1->power);
-            t1 = t1->next;
-        }
-        else
-        {
-            addnode(-t2->coeff, t2->power);
-            t2 = t2->next;
+// Function to display a polynomial
+void display(struct Node *poly) {
+    while (poly != NULL) {
+        printf("(%d)x^(%d) ", poly->coeff, poly->power);
+        poly = poly->next;
+        if (poly != NULL) {
+            printf("+ ");
         }
     }
-    if (t1 == NULL)
-    {
-        while (t2 != NULL)
-        {
-            addnode(-t2->coeff, t2->power);
-            t2 = t2->next;
-        }
-    }
-    if (t2 == NULL)
-    {
-        while (t1 != NULL)
-        {
-            addnode(t1->coeff, t1->power);
-            t1 = t1->next;
-        }
-    }
+    printf("\n");
 }
 
-void display(struct node *start)
-{
-    struct node *temp;
-    temp = start;
-    while (temp->next != NULL)
-    {
-        printf("(%d)x^(%d) + ", temp->coeff, temp->power);
-        temp = temp->next;
-    }
-    printf("(%d)x^(%d)\n", temp->coeff, temp->power);
-}
-
-int main()
-{
+int main() {
+    struct Node *start1 = NULL, *start2 = NULL, *result = NULL;
     int choice;
-    start1 = create(start1);
-    start2 = create(start2);
-    printf("The first polynomial is:");
-    display(start1);
-    printf("The second polynomial is:");
-    display(start2);
 
-    do
-    {
+    printf("Enter the first polynomial:\n");
+    start1 = createPoly();
+    printf("Enter the second polynomial:\n");
+    start2 = createPoly();
+
+    do {
         printf("\nPolynomial Operations Menu:\n");
         printf("1. Addition\n");
         printf("2. Subtraction\n");
-        printf("3. Display Result\n");
-        printf("4. Exit\n");
+        printf("3. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice)
-        {
-        case 1:
-            start3 = NULL; // Reset result polynomial for addition
-            polynomial_add();
-            printf("Polynomial addition is:\n");
-            display(start3);
-            break;
+        switch (choice) {
+            case 1:
+                result = addOrSubtractPolynomials(start1, start2, 0);
+                printf("Polynomial addition is: ");
+                display(result);
+                break;
 
-        case 2:
-            start3 = NULL; // Reset result polynomial for subtraction
-            polynomial_subtract();
-            printf("Polynomial subtraction is:\n");
-            display(start3);
-            break;
+            case 2:
+                result = addOrSubtractPolynomials(start1, start2, 1);
+                printf("Polynomial subtraction is: ");
+                display(result);
+                break;
 
-        case 3:
-            printf("Resultant Polynomial:\n");
-            display(start3);
-            break;
+            case 3:
+                printf("Exiting program.\n");
+                break;
 
-        case 4:
-            printf("Exiting program.\n");
-            break;
-
-        default:
-            printf("Invalid choice! Please enter a valid option.\n");
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
         }
 
     } while (choice != 0);
