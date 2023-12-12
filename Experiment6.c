@@ -2,119 +2,106 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define SIZE 5
+
 int front = -1;
 int rear = -1;
 int size = 5;
-int queue[5];
+int queue[SIZE];
 
-void insert_rear()
-{ 
-    int val;
-    if ((rear + 1) % size == front)
-    {
-        printf("Queue is full!");
+void display() {
+    if (front == -1) {
+        printf("Queue is empty!\n");
     }
-    else if (rear == -1)
-    {
-        printf("enter the value:\n");
-        scanf("%d", &val);
-        rear = 0;
-        front = 0;
-        queue[rear] = val;
+
+    for (int i = front; i != rear; i = (i + 1) % SIZE) {
+        printf("%d ", queue[i]);
     }
-    else
-    {
-        printf("enter the value:\n");
-        scanf("%d", &val);
-        rear = (rear + 1) % size;
-        queue[rear] = val;
-    }
+    printf("%d\n", queue[rear]);
 }
 
-void delete_front()
-{
-    int val;
-    if (front == -1)
-    {
-        printf("Queue is empty!");
+
+void insert_rear() {
+    if ((rear + 1) % SIZE == front) {
+        printf("Queue is full!\n");
     }
-    else if (front == rear)
-    {
-        val = queue[front];
-        printf("the deleted value is %d ", val);
+
+    int val;
+    printf("Enter the value to be inserted: ");
+    scanf("%d", &val);
+
+    if (front == -1) {
+        front = 0;
+    }
+    rear = (rear + 1) % SIZE;
+    queue[rear] = val;
+}
+
+void delete_front() {
+    if (front == -1) {
+        printf("Queue is empty!\n");
+    }
+
+    int val = queue[front];
+    printf("The deleted value is: %d\n", val);
+
+    if (front == rear) {
         front = -1;
         rear = -1;
-    }
-    else
-    {
-        val = queue[front];
-        printf("the deleted value is %d ", val);
-        front = (front + 1) % size;
+    } else {
+        front = (front + 1) % SIZE;
     }
 }
-void insert_front()
-{
-    int val;
-    if ((rear + 1) % size == front)
-    {
-        printf("queue is full!");
+
+
+void insert_front() {
+    if ((rear + 1) % SIZE == front) {
+        printf("Queue is full!\n");
     }
-    else if (front == -1)
-    {
-        printf("enter the value to be inserted:\n");
-        scanf("%d", &val);
+    int val;
+    printf("Enter the value to be inserted: ");
+    scanf("%d", &val);
+
+    if (front == -1) {
         front = 0;
         rear = 0;
-        queue[front] = val;
+    } else {
+        front = (front - 1 + SIZE) % SIZE;
     }
-    else
-    {
-        printf("enter the value to be inserted:\n");
-        scanf("%d", &val);
-        front = (front - 1 + size) % size;
-        queue[front] = val;
-    }
+
+    queue[front] = val;
 }
-void delete_rear()
-{
+
+void delete_rear() {
     int val;
-    if (rear == -1)
-    {
-        printf("queue is empty");
-    }
-    else if (rear == front)
-    {
+    if (rear == -1) {
+        printf("Queue is empty!\n");
+    } else if (rear == front) {
         val = queue[rear];
-        printf("the value to be deleted is: %d\n", val);
+        printf("The value to be deleted is: %d\n", val);
         front = -1;
         rear = -1;
-    }
-    else
-    {
+    } else {
         val = queue[rear];
-        printf("the value to be deleted is: %d\n", val);
+        printf("The value to be deleted is: %d\n", val);
         rear = (rear - 1 + size) % size;
     }
 }
-void main()
-{
+
+int main() {
     int choice1, choice2;
     int exit1 = 1;
     int exit2 = 1;
-    while (exit1)
-    {
-        printf("enter: \n 1.Input Restricted \n 2. Output Restricted \n3.Exit\n");
+    while (exit1) {
+        printf("Enter:\n 1. Input Restricted\n 2. Output Restricted\n 3. Exit\n");
         scanf("%d", &choice1);
-        switch (choice1)
-        {
+        switch (choice1) {
         case 1:
-            while (exit2)
-            {
+            while (exit2) {
                 printf("INPUT RESTRICTED:\n");
-                printf("Enter:\n 1.insert_rear\n 2.delete_rear\n3.delete_front\n4.Exit");
-                scanf("%d ", &choice2);
-                switch (choice2)
-                {
+                printf("Enter:\n 1. insert_rear\n 2. delete_rear\n 3. delete_front\n 4. Display\n 5. Exit\n");
+                scanf("%d", &choice2);
+                switch (choice2) {
                 case 1:
                     insert_rear();
                     break;
@@ -125,22 +112,23 @@ void main()
                     delete_front();
                     break;
                 case 4:
+                    display();
+                    break;
+                case 5:
                     exit2 = 0;
                     break;
                 default:
-                    printf("invalid input!");
+                    printf("Invalid input!\n");
                     break;
                 }
             }
             break;
         case 2:
-            while (exit2)
-            {
+            while (exit2) {
                 printf("OUTPUT RESTRICTED:\n");
-                printf("Enter:\n 1.insert_rear\n 2.delete_front\n3.insert_front\n4.Exit");
-                scanf("%d ", &choice2);
-                switch (choice2)
-                {
+                printf("Enter:\n 1. insert_rear\n 2. delete_front\n 3. insert_front\n 4. Display\n 5. Exit\n");
+                scanf("%d", &choice2);
+                switch (choice2) {
                 case 1:
                     insert_rear();
                     break;
@@ -151,10 +139,13 @@ void main()
                     insert_front();
                     break;
                 case 4:
+                    display();
+                    break;
+                case 5:
                     exit2 = 0;
                     break;
                 default:
-                    printf("invalid input!");
+                    printf("Invalid input!\n");
                     break;
                 }
             }
@@ -163,8 +154,10 @@ void main()
             exit1 = 0;
             break;
         default:
-            printf("inavlid input!");
+            printf("Invalid input!\n");
             break;
         }
     }
+
+    return 0;
 }
