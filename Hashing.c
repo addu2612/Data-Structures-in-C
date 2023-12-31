@@ -17,8 +17,17 @@ int probe(int H[], int key) {
 
 void Insert(int H[], int key) {
     int index = hash(key);
+
     if (H[index] != 0) {
-        index = probe(H, key);
+        int i = 1;
+        while (i < SIZE && H[(index + i) % SIZE] != 0) {
+            i++;
+        }
+        if (i == SIZE) {
+            printf("Hash table is full. Unable to insert %d.\n", key);
+            return;
+        }
+        index = (index + i) % SIZE;
     }
     H[index] = key;
 }
