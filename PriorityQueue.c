@@ -1,126 +1,98 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-// Structure to represent a node in the priority queue
-struct Node {
-    int data;
-    int priority;
-    struct Node* next;
-};
+int array_priority[100];
+int array_data[100];
+int size=0;
 
-// Structure to represent the priority queue
-struct PriorityQueue {
-    struct Node* front;
-};
-
-// Function to create a new node
-struct Node* createNode(int data, int priority) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->priority = priority;
-    newNode->next = NULL;
-    return newNode;
+void swap(int *a,int *b){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
 }
 
-// Function to create an empty priority queue
-struct PriorityQueue* createPriorityQueue() {
-    struct PriorityQueue* pq = (struct PriorityQueue*)malloc(sizeof(struct PriorityQueue));
-    pq->front = NULL;
-    return pq;
-}
+void minHeapify(int index){
+    int smallest=index;
+    int left=2*index;
+    int right=2*index+1;
 
-// Function to check if the priority queue is empty
-int isEmpty(struct PriorityQueue* pq) {
-    return (pq->front == NULL);
-}
-
-// Function to insert an element into the priority queue
-void enqueue(struct PriorityQueue* pq, int data, int priority) {
-    struct Node* newNode = createNode(data, priority);
-
-    // If the priority queue is empty or the new node has higher priority than the front node
-    if (isEmpty(pq) || priority < pq->front->priority) {
-        newNode->next = pq->front;
-        pq->front = newNode;
+    if(left<=size && array_priority[left]<array_priority[smallest]){
+        smallest=left;
     }
-    else {
-        struct Node* temp = pq->front;
-        while (temp->next != NULL && temp->next->priority <= priority) {
-            temp = temp->next;
+    if(right<=size && array_priority[right]<array_priority[smallest]){
+        smallest=right;
+    }
+
+    if(smallest!=index){
+        swap(&array_priority[index], &array_priority[smallest]);
+        swap(&array_data[index], &array_data[smallest]);
+        minHeapify(smallest);
+    }
+}
+
+void enqueue(int priority,int data){
+    if(size==99){
+        printf("Queue is full.");
+    }
+    else{
+        size++;
+        int i=size;
+        array_priority[i]=priority;
+        array_data[i]=data;
+
+        while(i>1 && array_priority[i]<array_priority[i/2]){
+            swap(&array_priority[i],&array_priority[i/2]);
+            swap(&array_data[i],&array_data[i/2]);
+            i=i/2;
         }
-        newNode->next = temp->next;
-        temp->next = newNode;
     }
 }
 
-// Function to remove and return the element with the highest priority from the priority queue
-int dequeue(struct PriorityQueue* pq) {
-    if (isEmpty(pq)) {
-        printf("Priority queue is empty.\n");
-        return -1;
+int dequeue(){
+    if (size == 0) {
+        printf("Priority queue is empty. Cannot dequeue.\n");
+        return -1; 
     }
-    else {
-        struct Node* temp = pq->front;
-        int data = temp->data;
-        pq->front = pq->front->next;
-        free(temp);
-        return data;
-    }
+    int root_data=array_data[1];
+    array_priority[1]=array_priority[size];
+    array_data[1]=array_data[size];
+    size--;
+    minHeapify(1);
+
+    return root_data;
 }
 
-// Function to display the elements in the priority queue
-void display(struct PriorityQueue* pq) {
-    if (isEmpty(pq)) {
-        printf("Priority queue is empty.\n");
+void printPriorityQueue() {
+    printf("Priority Queue: ");
+    for (int i = 1; i <= size; i++) {
+        printf("(%d, %d) ", array_priority[i], array_data[i]);
     }
-    else {
-        struct Node* temp = pq->front;
-        while (temp != NULL) {
-            printf("(%d, %d) ", temp->data, temp->priority);
-            temp = temp->next;
-        }
-        printf("\n");
-    }
+    printf("\n");
 }
 
 int main() {
-    struct PriorityQueue* pq = createPriorityQueue();
-    int choice, data, priority;
+    int priority, data;
+    char choice;
 
     do {
-        printf("\nPriority Queue Menu:\n");
-        printf("1. Enqueue\n");
-        printf("2. Dequeue\n");
-        printf("3. Display\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        printf("Enter priority: ");
+        scanf("%d", &priority);
 
-        switch (choice) {
-            case 1:
-                printf("Enter data and priority to enqueue: ");
-                scanf("%d %d", &data, &priority);
-                enqueue(pq, data, priority);
-                break;
+        printf("Enter data: ");
+        scanf("%d", &data);
 
-            case 2:
-                printf("Dequeued element: %d\n", dequeue(pq));
-                break;
+        enqueue(priority, data);
 
-            case 3:
-                printf("Priority queue: ");
-                display(pq);
-                break;
+        printf("Do you want to enqueue more elements? (y/n): ");
+        scanf(" %c", &choice); 
 
-            case 4:
-                printf("Exiting the program.\n");
-                break;
+    } while (choice == 'y' || choice == 'Y');
 
-            default:
-                printf("Invalid choice. Please enter a valid option.\n");
-        }
+    printPriorityQueue();
 
-    } while (choice != 4);
+    int removed = dequeue();
+    printf("Dequeued: %d\n", removed);
+
+    printPriorityQueue();
 
     return 0;
 }
