@@ -6,7 +6,6 @@
 
 int front = -1;
 int rear = -1;
-int size = 5;
 int queue[SIZE];
 
 void display() {
@@ -84,7 +83,7 @@ void delete_rear() {
     } else {
         val = queue[rear];
         printf("The value to be deleted is: %d\n", val);
-        rear = (rear - 1 + size) % size;
+        rear = (rear - 1 + SIZE) % SIZE;
     }
 }
 
