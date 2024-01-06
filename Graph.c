@@ -13,8 +13,8 @@ int pop();
 
 int main()
 {
-    int n, i, s, ch, j;
-    char c, dummy;
+    int n, i, j, s, ch;
+    char c;
     printf("Enter the number of vertices: ");
     scanf("%d", &n);
 
