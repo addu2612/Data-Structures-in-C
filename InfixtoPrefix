@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <ctype.h>
+
+char infix[100], prefix[100];
+int top = -1;
+
+void push(char *stack, char val) {
+    if (top == 99) {
+        printf("Stack is full\n");
+    } else {
+        stack[++top] = val;
+        printf("%c pushed into stack\n", val);
+    }
+}
+
+char pop(char *stack) {
+    if (top == -1) {
+        printf("Stack is empty\n");
+        return '\0';
+    } else {
+        char k = stack[top];
+        top--;
+        return k;
+    }
+}
+
+int isOperator(char ch) {
+    return (ch == '+' || ch == '-' || ch == '*' || ch == '/');
+}
+
+int priority(char a) {
+    if (a == '^' || a == '%') {
+        return 3;
+    } else if (a == '/' || a == '*') {
+        return 2;
+    } else if (a == '+' || a == '-') {
+        return 1;
+    }
+    return 0;
+}
+
+void reverseString(char *str) {
+    int length = 0;
+    while (str[length] != '\0') {
+        length++;
+    }
+
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+void infixtopre() {
+    int i = 0, j = 0;
+    char x, y;
+    char stack[100];  
+
+    reverseString(infix);
+
+    x = infix[i];
+    while (x != '\0') {
+        if (isalpha(x) || isdigit(x)) {
+            prefix[j] = x;
+            j++;
+        } else if (x == ')') {
+            push(stack, x);
+        } else if (x == '+' || x == '-' || x == '*' || x == '/' || x == '^' || x == '%') {
+            while (top != -1 && priority(x) < priority(stack[top])) {
+                y = pop(stack);
+                prefix[j] = y;
+                j++;
+            }
+            push(stack, x);
+        } else if (x == '(') {
+            y = pop(stack);
+            while (y != ')') {
+                prefix[j] = y;
+                j++;
+                y = pop(stack);
+            }
+        } else {
+            printf("Expression is not correct\n");
+        }
+        i++;
+        x = infix[i];
+    }
+    while (top != -1) {
+        y = pop(stack);
+        prefix[j] = y;
+        j++;
+    }
+    prefix[j] = '\0';
+
+    // Reverse the result to get the final prefix expression
+    reverseString(prefix);
+}
+
+int evaluatePrefix(char *prefix) {
+    int stack[100];  
+    top = -1;
+    int i, operand1, operand2, result;
+    char ch;
+
+    for (i = 0; prefix[i] != '\0'; i++) {
+        ch = prefix[i];
+
+        if (isdigit(ch)) {
+            push(stack, ch - '0');
+        } else if (isOperator(ch)) {
+            operand1 = pop(stack);
+            operand2 = pop(stack);
+
+            switch (ch) {
+                case '+':
+                    result = operand1 + operand2;
+                    break;
+                case '-':
+                    result = operand1 - operand2;
+                    break;
+                case '*':
+                    result = operand1 * operand2;
+                    break;
+                case '/':
+                    result = operand1 / operand2;
+                    break;
+            }
+
+            push(stack, result);
+        }
+    }
+
+    return pop(stack);
+}
+
+int main() {
+    printf("Enter the infix expression:\n");
+    scanf("%s", infix);
+    printf("Infix Statement:\n%s\n", infix);
+    infixtopre();
+    printf("Prefix Statement:\n%s\n", prefix);
+    int result = evaluatePrefix(prefix);
+    printf("Result of evaluation: %d\n", result);
+    return 0;
+}
