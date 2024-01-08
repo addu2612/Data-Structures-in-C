@@ -19,15 +19,11 @@ void Insert(int H[], int key) {
     int index = hash(key);
 
     if (H[index] != 0) {
-        int i = 1;
-        while (i < SIZE && H[(index + i) % SIZE] != 0) {
-            i++;
-        }
-        if (i == SIZE) {
+        index = probe(H, index);
+        if (index == -1) {
             printf("Hash table is full. Unable to insert %d.\n", key);
             return;
         }
-        index = (index + i) % SIZE;
     }
     H[index] = key;
 }
