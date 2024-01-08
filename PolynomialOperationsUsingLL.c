@@ -3,13 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Node structure for a term in a polynomial
 struct Node {
     int coeff, power;
     struct Node *next;
 };
 
-// Function to create a polynomial
+
 struct Node *createPoly() {
     int n, c, p;
     struct Node *start = NULL, *temp;
@@ -39,31 +38,34 @@ struct Node *createPoly() {
     return start;
 }
 
-// Function to add or subtract two polynomials
 struct Node *addOrSubtractPolynomials(struct Node *poly1, struct Node *poly2, int subtract) {
     struct Node *result = NULL;
     struct Node *t1 = poly1;
     struct Node *t2 = poly2;
 
-    while (t1 != NULL || t2 != NULL) {
-        int c = 0, p = 0;
+    while (t1 != NULL && t2 != NULL) {
+        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        newNode->next = NULL;
 
-        if (t1 != NULL) {
-            c += t1->coeff;
-            p = t1->power;
+        // If powers are equal
+        if (t1->power == t2->power) {
+            newNode->coeff = t1->coeff + (subtract ? -1 : 1) * t2->coeff;
+            newNode->power = t1->power;
             t1 = t1->next;
-        }
-
-        if (t2 != NULL) {
-            c += (subtract ? -1 : 1) * t2->coeff;
-            p = (t2->power > p) ? t2->power : p;
             t2 = t2->next;
         }
-
-        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-        newNode->coeff = c;
-        newNode->power = p;
-        newNode->next = NULL;
+        // If power of first polynomial is greater
+        else if (t1->power > t2->power) {
+            newNode->coeff = t1->coeff;
+            newNode->power = t1->power;
+            t1 = t1->next;
+        }
+        // If power of second polynomial is greater
+        else {
+            newNode->coeff = (subtract ? -1 : 1) * t2->coeff;
+            newNode->power = t2->power;
+            t2 = t2->next;
+        }
 
         if (result == NULL) {
             result = newNode;
@@ -76,10 +78,41 @@ struct Node *addOrSubtractPolynomials(struct Node *poly1, struct Node *poly2, in
         }
     }
 
+    // If there are remaining terms in the first polynomial
+    while (t1 != NULL) {
+        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        newNode->coeff = t1->coeff;
+        newNode->power = t1->power;
+        newNode->next = NULL;
+
+        struct Node *temp = result;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+
+        t1 = t1->next;
+    }
+
+    // If there are remaining terms in the second polynomial
+    while (t2 != NULL) {
+        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        newNode->coeff = (subtract ? -1 : 1) * t2->coeff;
+        newNode->power = t2->power;
+        newNode->next = NULL;
+
+        struct Node *temp = result;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+
+        t2 = t2->next;
+    }
+
     return result;
 }
 
-// Function to display a polynomial
 void display(struct Node *poly) {
     while (poly != NULL) {
         printf("(%d)x^(%d) ", poly->coeff, poly->power);
@@ -129,7 +162,7 @@ int main() {
                 printf("Invalid choice! Please enter a valid option.\n");
         }
 
-    } while (choice != 0);
+    } while (choice != 3);
 
     return 0;
 }
