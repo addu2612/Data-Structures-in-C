@@ -2,7 +2,7 @@
 #include<stdlib.h>
 
 #define SIZE 10
-
+/**/
 struct Node {
     int data;
     struct Node* next;
