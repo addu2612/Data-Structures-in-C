@@ -7,7 +7,7 @@ struct Node
     struct Node *next;
 }*start;
 
-
+/**/
 void createCLL() {
     struct Node *nn, *temp;
 
